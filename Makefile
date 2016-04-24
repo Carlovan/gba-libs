@@ -1,4 +1,4 @@
-BINPATH := $(realpath /path/to/your/compiler/bin/directory/)
+BINPATH := $(realpath ../SDK/devkitARM/bin)
 PATH := $(BINPATH):$(PATH)
 
 # --- Project details -------------------------------------------------

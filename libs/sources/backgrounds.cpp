@@ -18,22 +18,22 @@ void EnableBackground(Bg* bg)
 	case 0:
 		{
 			REG_BG0CNT = temp;
-			REG_DISPCNT |= BG0_ENABLE;
+			REG_DISPCNT |= Display::BG0_ENABLE;
 		}break;
 	case 1:
 		{
 			REG_BG1CNT = temp;
-			REG_DISPCNT |= BG1_ENABLE;
+			REG_DISPCNT |= Display::BG1_ENABLE;
 		}break;
 	case 2:
 		{
 			REG_BG2CNT = temp;
-			REG_DISPCNT |= BG2_ENABLE;
+			REG_DISPCNT |= Display::BG2_ENABLE;
 		}break;
 	case 3:
 		{
 			REG_BG3CNT = temp;
-			REG_DISPCNT |= BG3_ENABLE;
+			REG_DISPCNT |= Display::BG3_ENABLE;
 		}break;
 
 	default:break;
@@ -46,7 +46,7 @@ void UpdateBackground(Bg bg)
 	switch(bg.number)
 	{
 	case 0:
-		if((REG_DISPCNT & 7) == MODE_0 || (REG_DISPCNT & 7) == MODE_1){
+		if((REG_DISPCNT & 7) == Display::MODE_0 || (REG_DISPCNT & 7) == Display::MODE_1){
 			REG_BG0HOFS = bg.x_scroll;
 			REG_BG0VOFS = bg.y_scroll;
 			REG_BG0CNT &= ~((u16)3);
@@ -54,7 +54,7 @@ void UpdateBackground(Bg bg)
 		}
 		break;
 	case 1:
-		if((REG_DISPCNT & 7) == MODE_0 || (REG_DISPCNT & 7) == MODE_1){
+		if((REG_DISPCNT & 7) == Display::MODE_0 || (REG_DISPCNT & 7) == Display::MODE_1){
 			REG_BG1HOFS = bg.x_scroll;
 			REG_BG1VOFS = bg.y_scroll;
 			REG_BG1CNT &= ~((u16)3);
@@ -65,7 +65,7 @@ void UpdateBackground(Bg bg)
 		REG_BG2CNT &= ~((u16)3);
 		REG_BG2CNT |= (bg.priority & 3);
 		//se è un rotbg
-		if((REG_DISPCNT & 7) == MODE_1 || (REG_DISPCNT & 7) == MODE_2)
+		if((REG_DISPCNT & 7) == Display::MODE_1 || (REG_DISPCNT & 7) == Display::MODE_2)
 		{
 			REG_BG2X = bg.DX;
 			REG_BG2Y = bg.DY;
@@ -85,7 +85,7 @@ void UpdateBackground(Bg bg)
 		REG_BG3CNT &= ~((u16)3);
 		REG_BG3CNT |= (bg.priority & 3);
 		//se è un rotbg
-		if((REG_DISPCNT & 7) == MODE_2)
+		if((REG_DISPCNT & 7) == Display::MODE_2)
 		{
 			REG_BG3X = bg.DX;
 			REG_BG3Y = bg.DY;
@@ -95,7 +95,7 @@ void UpdateBackground(Bg bg)
 			REG_BG3PC = bg.PC;
 			REG_BG3PD = bg.PD;
 		}
-		else if((REG_DISPCNT & 7) == MODE_0)//altrimenti è un text bg...
+		else if((REG_DISPCNT & 7) == Display::MODE_0)//altrimenti è un text bg...
 		{
 			REG_BG3HOFS = bg.x_scroll;
 			REG_BG3VOFS = bg.y_scroll;

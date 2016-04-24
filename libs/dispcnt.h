@@ -8,13 +8,42 @@
 #ifndef DISPCNT_H
 #define DISPCNT_H
 
-//define the bits that control the screen mode 0-5
-#define MODE_0         0x0
-#define MODE_1         0x1
-#define MODE_2         0x2
-#define MODE_3         0x3
-#define MODE_4         0x4
-#define MODE_5         0x5
+// Constants to control the display
+namespace Display{
+	enum Flags{
+		// Bits to select display mode
+		MODE_0     = 0x0,
+		MODE_1     = 0x1,
+		MODE_2     = 0x2,
+		MODE_3     = 0x3,
+		MODE_4     = 0x4,
+		MODE_5     = 0x5,
+
+		// Screen size
+		WIDTH      = 240,
+		HEIGHT     = 160,
+
+		// Bits to enable backgrounds and sprites
+		BG0_ENABLE = 0x100,
+		BG1_ENABLE = 0x200,
+		BG2_ENABLE = 0x400,
+		BG3_ENABLE = 0x800,
+		SPR_ENABLE = 0x1000,
+
+		// Bits to select sprites mapping mode (matrix (2D) or vector (1D))
+		SPR_MAP_2D = 0x0,
+		SPR_MAP_1D = 0x40
+	};
+
+	void initialize(u32 mode){
+		unsetBits(REG_DISPCNT, ~0);
+		setBits(REG_DISPCNT, mode);
+	}
+}
+
+
+
+// --- Not used yet --- //
 
 //Define the buffer which is used to set the active buffer
 //when using double buffering
@@ -24,33 +53,15 @@
 //be updated during a horizontal blank
 #define H_BLANK_OAM    0x20
 
-//use these two defines to choose which mapping mode is used
-//for sprite graphics 2D or 1D
-#define OBJ_MAP_2D     0x0
-#define OBJ_MAP_1D     0x40
-
 //Causes the screen to go white by using a forced blank
 #define FORCE_BLANK    0x80
-
-//define the flags for enabling backgrounds and objects(sprites)
-#define BG0_ENABLE     0x100
-#define BG1_ENABLE     0x200
-#define BG2_ENABLE     0x400
-#define BG3_ENABLE     0x800
-#define OBJ_ENABLE     0x1000
 
 //allows window displays (dont worry about these)
 #define WIN1_ENABLE    0x2000
 #define WIN2_ENABLE    0x4000
-#define WINOBJ_ENABLE  0x8000
+#define WINSPR_ENABLE  0x8000
 
 
-//Set the mode that you want to use, binary OR them together as below:
-//e.g. SetMode(MODE_2 | OBJ_ENABLE | OBJ_MAP_1D);
-#define SetMode(mode) REG_DISPCNT = (mode)
 
-//Define the screen width and height values to be used
-#define SCREEN_WIDTH   240
-#define SCREEN_HEIGHT  160
 
 #endif

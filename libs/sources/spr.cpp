@@ -18,7 +18,7 @@ void CopyOAM()
 {
 	u16* temp;
 	temp = (u16*)sprites;
-	DMA_copy(temp, OAMmem, 128*4, DMA_ENABLE);
+	dmaCopy(temp, OAMmem, 128*4, DMA_ENABLE);
 }
 
 //Move the sprite

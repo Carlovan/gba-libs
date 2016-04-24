@@ -199,9 +199,12 @@ extern u16* OBJPaletteMem;
 #define TM_IRQ        0x40
 #define TM_ENABLE     0x80
 
-void WaitForVsync();
-void DMA_copy(const void*, void*, u32, u32);
-void sleep(int);
-int abs(int);
+inline void waitForVsync();
+inline void dmaCopy(const void*, void*, u32, u32);
+inline void sleep(int);
+inline int abs(int);
+inline u32 toggleBits(u32&, u32);
+inline u32 setBits(u32&, u32);
+inline u32 unsetBits(u32&, u32);
 
 #endif
