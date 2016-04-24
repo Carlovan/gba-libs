@@ -2,32 +2,34 @@
 #define BG_H
 
 //BGCNT defines
-struct BG_CONTROL{
-	static const int ENABLE_MOSAIC         = 0x40;
-  	static const int COLOR256              = 0x80;
-  	static const int COLOR16               = 0x0;
+namespace Backgrounds{
+	enum BackgroundControl{
+		ENABLE_MOSAIC         = 0x40,
+	  	COLOR256              = 0x80,
+	  	COLOR16               = 0x0,
 
-	static const int CHAR_SHIFT            = 0x2;
-	static const int SCREEN_SHIFT          = 0x8;
-	static const int TEXTBG_SIZE_256x256   = 0x0;
-	static const int TEXTBG_SIZE_256x512   = 0x8000;
-	static const int TEXTBG_SIZE_512x256   = 0x4000;
-	static const int TEXTBG_SIZE_512x512   = 0xC000;
+		CHAR_SHIFT            = 0x2,
+		SCREEN_SHIFT          = 0x8,
 
-	static const int ROTBG_SIZE_128x128    = 0x0;
-	static const int ROTBG_SIZE_256x256    = 0x4000;
-	static const int ROTBG_SIZE_512x512    = 0x8000;
-	static const int ROTBG_SIZE_1024x1024  = 0xC000;
+		TEXTBG_SIZE_256x256   = 0x0,
+		TEXTBG_SIZE_256x512   = 0x8000,
+		TEXTBG_SIZE_512x256   = 0x4000,
+		TEXTBG_SIZE_512x512   = 0xC000,
+		ROTBG_SIZE_128x128    = 0x0,
+		ROTBG_SIZE_256x256    = 0x4000,
+		ROTBG_SIZE_512x512    = 0x8000,
+		ROTBG_SIZE_1024x1024  = 0xC000,
 
-	static const int WRAP                  = 0x200;
-};
+		WRAP                  = 0x200
+	};
+}
 
 #define CharBaseBlock(n)      (((n)*0x4000)+0x6000000)
 #define ScreenBaseBlock(n)    (((n)*0x800)+0x6000000)
 
-typedef struct Bg
+typedef struct Background
 {
-	Bg(){
+	Background(){
 		mosaic = colorMode = number = size = charBaseBlock = screenBaseBlock = 0;
 		wraparound = x_scroll = y_scroll = DX = DY = PB = PD = 0;
 		PA = PC = 1;
@@ -46,14 +48,12 @@ typedef struct Bg
 	s32 DX,DY;
 	s16 PA,PB,PC,PD;
 	u16 priority;
-}Bg;
 
-//Inizializza il bg
-void EnableBackground(Bg* bg);
-
-void UpdateBackground(Bg bg);
-
-//Applica modifiche al bg per poi essere updatato
-void RotateBackground(Bg bg, int angle,int center_x, int center_y, FIXED zoom);
+	void update();
+	void enable();
+	void loadTiles(const u16 tiles[], int size);
+	void loadMap(const u16 map[], int size);
+	void rotate(int angle, s32 x_scale, s32 y_scale);
+}Background;
 
 #endif

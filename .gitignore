@@ -1,1 +1,5 @@
-/libs/bin/*
+libs/bin/*
+*.gba
+*.o
+*.elf
+*.sav

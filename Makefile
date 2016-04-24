@@ -3,7 +3,7 @@ PATH := $(BINPATH):$(PATH)
 
 # --- Project details -------------------------------------------------
 
-TARGET  := yourprogramname
+TARGET  := test
 
 OBJS    := $(TARGET).o
 LIBS_S  := $(wildcard libs/sources/*.cpp)
@@ -54,7 +54,11 @@ clean :
 	@rm -fv *.elf
 	@rm -fv *.o
 
+cleanlibs:
+	@rm -fv libs/bin/*
+
 #---- Compile libraries ------------------------------------
 libs:
+	mkdir libs/bin
 	cd libs && $(MAKE)
 #EOF

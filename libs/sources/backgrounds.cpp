@@ -3,120 +3,116 @@
 #include "../sincos.h"
 #include "../dispcnt.h"
 
-//Inizializza il bg
-void EnableBackground(Bg* bg)
-{
+// Initializes the background
+void Background::enable(){
 	u16 temp;
 
-	bg->tileData = (u16*)CharBaseBlock((u64)(bg->charBaseBlock));
-	bg->mapData = (u16*)ScreenBaseBlock((u64)(bg->screenBaseBlock));
-	temp = bg->size | (bg->charBaseBlock<<BG_CONTROL::CHAR_SHIFT) | (bg->screenBaseBlock<<BG_CONTROL::SCREEN_SHIFT)
-		| bg->colorMode | bg->mosaic | bg->wraparound;
+	tileData = (u16*)CharBaseBlock((u64)(charBaseBlock));
+	mapData = (u16*)ScreenBaseBlock((u64)(screenBaseBlock));
+	temp = size | (charBaseBlock<<Backgrounds::CHAR_SHIFT) | (screenBaseBlock<<Backgrounds::SCREEN_SHIFT)
+		| colorMode | mosaic | wraparound;
 
-	switch(bg->number)
+	switch(number)
 	{
 	case 0:
-		{
-			REG_BG0CNT = temp;
-			REG_DISPCNT |= Display::BG0_ENABLE;
-		}break;
+		REG_BG0CNT = temp;
+		REG_DISPCNT |= Display::BG0_ENABLE;
+		break;
 	case 1:
-		{
-			REG_BG1CNT = temp;
-			REG_DISPCNT |= Display::BG1_ENABLE;
-		}break;
+		REG_BG1CNT = temp;
+		REG_DISPCNT |= Display::BG1_ENABLE;
+		break;
 	case 2:
-		{
-			REG_BG2CNT = temp;
-			REG_DISPCNT |= Display::BG2_ENABLE;
-		}break;
+		REG_BG2CNT = temp;
+		REG_DISPCNT |= Display::BG2_ENABLE;
+		break;
 	case 3:
-		{
-			REG_BG3CNT = temp;
-			REG_DISPCNT |= Display::BG3_ENABLE;
-		}break;
-
-	default:break;
-
+		REG_BG3CNT = temp;
+		REG_DISPCNT |= Display::BG3_ENABLE;
+		break;
 	}
 }
 
-void UpdateBackground(Bg bg)
-{
-	switch(bg.number)
+// Copies background data to the memory registers
+void Background::update(){
+	switch(number)
 	{
+	// It can be only a text background
 	case 0:
+		// Check if it's enabled in the current mode
 		if((REG_DISPCNT & 7) == Display::MODE_0 || (REG_DISPCNT & 7) == Display::MODE_1){
-			REG_BG0HOFS = bg.x_scroll;
-			REG_BG0VOFS = bg.y_scroll;
+			REG_BG0HOFS = x_scroll;
+			REG_BG0VOFS = y_scroll;
 			REG_BG0CNT &= ~((u16)3);
-			REG_BG0CNT |= (bg.priority & 3);
+			REG_BG0CNT |= (priority & 3);
 		}
 		break;
+	// Samething as background 0
 	case 1:
 		if((REG_DISPCNT & 7) == Display::MODE_0 || (REG_DISPCNT & 7) == Display::MODE_1){
-			REG_BG1HOFS = bg.x_scroll;
-			REG_BG1VOFS = bg.y_scroll;
+			REG_BG1HOFS = x_scroll;
+			REG_BG1VOFS = y_scroll;
 			REG_BG1CNT &= ~((u16)3);
-			REG_BG1CNT |= (bg.priority & 3);
+			REG_BG1CNT |= (priority & 3);
 		}
 		break;
+	// Background 2 is present in every mode
 	case 2:
 		REG_BG2CNT &= ~((u16)3);
-		REG_BG2CNT |= (bg.priority & 3);
-		//se è un rotbg
-		if((REG_DISPCNT & 7) == Display::MODE_1 || (REG_DISPCNT & 7) == Display::MODE_2)
-		{
-			REG_BG2X = bg.DX;
-			REG_BG2Y = bg.DY;
+		REG_BG2CNT |= (priority & 3);
+		// Check if it's a rotational background
+		if((REG_DISPCNT & 7) == Display::MODE_1 || (REG_DISPCNT & 7) == Display::MODE_2){
+			REG_BG2X = DX;
+			REG_BG2Y = DY;
 
-			REG_BG2PA = bg.PA;
-			REG_BG2PB = bg.PB;
-			REG_BG2PC = bg.PC;
-			REG_BG2PD = bg.PD;
+			REG_BG2PA = PA;
+			REG_BG2PB = PB;
+			REG_BG2PC = PC;
+			REG_BG2PD = PD;
 		}
-		else //altrimenti è un text bg...
-		{
-			REG_BG2HOFS = bg.x_scroll;
-			REG_BG2VOFS = bg.y_scroll;
+		// Else is a text background
+		else{
+			REG_BG2HOFS = x_scroll;
+			REG_BG2VOFS = y_scroll;
 		}
 		break;
+	// Samething as background 2
 	case 3:
 		REG_BG3CNT &= ~((u16)3);
-		REG_BG3CNT |= (bg.priority & 3);
-		//se è un rotbg
-		if((REG_DISPCNT & 7) == Display::MODE_2)
-		{
-			REG_BG3X = bg.DX;
-			REG_BG3Y = bg.DY;
+		REG_BG3CNT |= (priority & 3);
+		
+		if((REG_DISPCNT & 7) == Display::MODE_2){
+			REG_BG3X = DX;
+			REG_BG3Y = DY;
 
-			REG_BG3PA = bg.PA;
-			REG_BG3PB = bg.PB;
-			REG_BG3PC = bg.PC;
-			REG_BG3PD = bg.PD;
+			REG_BG3PA = PA;
+			REG_BG3PB = PB;
+			REG_BG3PC = PC;
+			REG_BG3PD = PD;
 		}
-		else if((REG_DISPCNT & 7) == Display::MODE_0)//altrimenti è un text bg...
-		{
-			REG_BG3HOFS = bg.x_scroll;
-			REG_BG3VOFS = bg.y_scroll;
+		else if((REG_DISPCNT & 7) == Display::MODE_0){
+			REG_BG3HOFS = x_scroll;
+			REG_BG3VOFS = y_scroll;
 		}
 		break;
-	default: break;
 	}
+}
+
+void Background::loadTiles(const u16 tiles[], int size){
+	dmaCopy(tiles, tileData, size, DMA_ENABLE);
+}
+
+void Background::loadMap(const u16 map[], int size){
+	dmaCopy(map, mapData, size, DMA_ENABLE);
 }
 
 //Applica modifiche al bg per poi essere updatato
-void RotateBackground(Bg bg, int angle,int center_x, int center_y, FIXED zoom)
-{
+void Background::rotate(int angle, s32 x_scale, s32 y_scale){
+	DX = 0;
+	DY = 0;
 
-	center_y = (center_y * zoom)>>8;
-	center_x = (center_x * zoom)>>8;
-
-	bg.DX = ((bg.x_scroll<<8)-center_y*(FIXED)SIN[angle]-center_x*(FIXED)COS[angle]);
-	bg.DY = ((bg.y_scroll<<8)-center_y*(FIXED)COS[angle]+center_x*(FIXED)SIN[angle]);
-
-	bg.PA = ((FIXED)COS[angle]*zoom)>>8;
-	bg.PB = ((FIXED)SIN[angle]*zoom)>>8; 
-	bg.PC = ((FIXED)-SIN[angle]*zoom)>>8;
-	bg.PD = ((FIXED)COS[angle]*zoom)>>8;
+	PA = (((1<<8)/x_scale) * COS[angle])>>8;
+	PB = (((1<<8)/y_scale) * SIN[angle])>>8;
+	PC = (((1<<8)/x_scale) * -SIN[angle])>>8;
+	PD = (((1<<8)/y_scale) * COS[angle])>>8;
 }

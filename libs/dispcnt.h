@@ -8,6 +8,8 @@
 #ifndef DISPCNT_H
 #define DISPCNT_H
 
+#include "gba.h"
+
 // Constants to control the display
 namespace Display{
 	enum Flags{
@@ -35,12 +37,9 @@ namespace Display{
 		SPR_MAP_1D = 0x40
 	};
 
-	void initialize(u32 mode){
-		unsetBits(REG_DISPCNT, ~0);
-		setBits(REG_DISPCNT, mode);
-	}
+	
 }
-
+void initialize(u32 mode);
 
 
 // --- Not used yet --- //
