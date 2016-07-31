@@ -59,6 +59,6 @@ cleanlibs:
 
 #---- Compile libraries ------------------------------------
 libs:
-	mkdir libs/bin
+	mkdir -p libs/bin
 	cd libs && $(MAKE)
 #EOF
