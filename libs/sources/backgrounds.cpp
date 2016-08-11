@@ -103,6 +103,9 @@ void Background::loadTiles(const u16 tiles[], int size){
 }
 
 void Background::loadMap(const u16 map[], int size){
+	loadMap((const u8*)map, size);
+}
+void Background::loadMap(const u8  map[], int size){
 	dmaCopy(map, mapData, size, DMA_ENABLE);
 }
 

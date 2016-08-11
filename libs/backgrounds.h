@@ -53,6 +53,7 @@ typedef struct Background
 	void enable();
 	void loadTiles(const u16 tiles[], int size);
 	void loadMap(const u16 map[], int size);
+	void loadMap(const u8  map[], int size);
 	void rotate(int angle, s32 x_scale, s32 y_scale);
 }Background;
 

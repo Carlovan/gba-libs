@@ -23,8 +23,8 @@ int main(){
 	bg.loadTiles(tiles, tiles_HEIGHT*tiles_WIDTH/2);
 	bg.loadMap(map, 1024);
 
+	bg.rotate(30, 1, 1);
 	bg.update();
-	bg.rotate(0, 1, 1);
 
 	int x = 0, y = 0, a = 0;
 	while(1){
